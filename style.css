@@ -1,0 +1,28 @@
+body {
+    background-color: #2e3440;
+    color: #d8dee9;
+    text-align: center;
+}
+table {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    border: 1px solid #3b4252;
+    border-radius: 5px;
+    background-color: #4c566a;
+    padding: 5px;
+}
+td {
+    font-size: xx-large;
+    font-weight: bold;
+    text-align: center;
+    background-color: #3b4252;
+    border-radius: 5px;
+    width: 80px;
+    height: 80px;
+}
+td:hover {
+    background-color: #434c5e;
+}
