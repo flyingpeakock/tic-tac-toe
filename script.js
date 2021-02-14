@@ -155,21 +155,14 @@ function place(elem) {
 
 let table = document.getElementById("board");
 
-let tableRows = []
 for (let i = 0; i < 3; i++) {
     let row = document.createElement('tr');
-    tableRows.push(row);
     for (let j = 0; j < 3; j++) {
         let data = document.createElement('td');
         data.id = `${i}${j}`;
         data.onclick = function () {place(this) };
         data.innerHTML = " ";
-        tableRows[i].appendChild(data);
+        row.appendChild(data);
     }
+    table.appendChild(row);
 }
-
-// Now all the rows are on the page
-for (let i = 0; i < 3; i++) {
-    table.appendChild(tableRows[i]);
-}
-
