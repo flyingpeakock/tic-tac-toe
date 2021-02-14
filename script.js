@@ -1,9 +1,36 @@
+function copyArray(ar) {
+    let ret = new Array();
+    for (let i = 0; i < ar.length; i++) {
+        ret.push(ar[i].slice());
+    }
+    return ret;
+}
+
+function getPlayer(data) {
+    let Xcount = 0;
+    let Ocount = 0;
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            if ("X" === data[i][j]) {
+                Xcount++;
+            }
+            if ("O" === data[i][j]) {
+                Ocount++;
+            }
+        }
+    }
+    if (Xcount > Ocount) {
+        return "O";
+    }
+    return "X"
+}
+
 function getStates(data, player) {
     let states = new Array();
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
-            if (data[i][j] === "") {
-                let state = data.slice();
+            if (data[i][j] === " ") {
+                let state = copyArray(data);
                 state[i][j] = player;
                 states.push(state);
             }
@@ -12,11 +39,86 @@ function getStates(data, player) {
     return states;
 }
 
-function place(elem) {
-    let row = Number(elem.id[0]);
-    let col = Number(elem.id[1]);
+function getWinner(data) {
+    for (let i = 0; i < 3; i++) {
+        // Checking columns
+        if (data[i][0] === data[i][1] &&
+            data[i][0] === data[i][2] &&
+            data[i][i] !== " ") {
+            return data[i][0];
+        }
+        // Checking rows
+        if (data[0][i] === data[1][i] &&
+            data[0][i] === data[2][i] &&
+            data[0][i] !== " ") {
+            return data[0][i];
+        }
+    }
+    // Checking diagonals
+    if (data[0][0] === data[1][1] &&
+        data[0][0] === data[2][2] &&
+        data[0][0] !== " ") {
+        return data[0][0];
+    }
+    if (data[0][2] === data[1][1] &&
+        data[0][2] === data[2][0] &&
+        data[0][2] !== " ") {
+        return data[0][2];
+    }
+    return " ";
+}
 
-    // Place x on this spot
+function isPlaying(data) {
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            if (data[i][j] == " ") {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+function minimax(data) {
+    player = getPlayer(data);
+    let winner = getWinner(data);
+    if (winner === "X") {
+        return -1;
+    }
+    if (winner === "O") {
+        return 1;
+    }
+    if (!isPlaying(data)) {
+        return 0;
+    }
+    // Recurse the states returning the best state
+    let states = getStates(data, player);
+    if (player === "O") { // Is maximizing player
+        let val = -2;
+        for (let i = 0; i < states.length; i++) {
+            val = Math.max(val, minimax(states[i]));
+        }
+        return val;
+    }
+    else {                // Minimizing player
+        let val = 2;
+        for (let i = 0; i < states.length; i++) {
+            val = Math.min(val, minimax(states[i]));
+        }
+        return val;
+    }
+}
+
+function setState(state) {
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            let td = document.getElementById(`${i}${j}`);
+            td.innerHTML = state[i][j];
+        }
+    }
+}
+
+function place(elem) {
     elem.innerHTML = "X";
     
     // Make an array out of the table to use internally
@@ -29,8 +131,27 @@ function place(elem) {
         }
     }
 
+    // Geting all the states to run minimax on
     let states = getStates(data, "O");
+    let results = new Array();
+    for (let i = 0; i < states.length; i++) {
+        results.push(minimax(states[i]));
+    }
+
+    let idx = results.findIndex(res => res === 1);
+    if (-1 < idx) {
+        setState(states[idx]);
+        return;
+    }
+    idx = results.findIndex(res => res === 0);
+    if (-1 < idx){
+        setState(states[idx]);
+        return;
+    }
+    idx = results.findIndex(res => res === -1);
+    setState(states[idx]);
 }
+
 
 let table = document.getElementById("board");
 
@@ -42,6 +163,7 @@ for (let i = 0; i < 3; i++) {
         let data = document.createElement('td');
         data.id = `${i}${j}`;
         data.onclick = function () {place(this) };
+        data.innerHTML = " ";
         tableRows[i].appendChild(data);
     }
 }
