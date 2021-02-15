@@ -119,6 +119,8 @@ function setState(state) {
 }
 
 function place(elem) {
+    if (elem.innerHTML != " ")
+        return;
     elem.innerHTML = "X";
     
     // Make an array out of the table to use internally
