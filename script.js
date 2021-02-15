@@ -119,10 +119,6 @@ function setState(state) {
 }
 
 function place(elem) {
-    if (elem.innerHTML != " ")
-        return;
-    elem.innerHTML = "X";
-    
     // Make an array out of the table to use internally
     let data = new Array(3);
     for (let i = 0; i < 3; i++) {
@@ -132,6 +128,10 @@ function place(elem) {
             data[i][j] = cell;
         }
     }
+
+    if (elem.innerHTML != " ")
+        return data;
+    elem.innerHTML = "X";
 
     // Geting all the states to run minimax on
     let states = getStates(data, "O");
