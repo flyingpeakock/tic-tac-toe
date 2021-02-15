@@ -5,17 +5,24 @@ body {
     background-color: #2e3440;
     color: #d8dee9;
     text-align: center;
+    display: flex;
+    padding: 5%;
+}
+div {
+    flex: 1;
 }
 table {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    -webkit-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
+    margin: auto auto;
     border: 1px solid #3b4252;
     border-radius: 5px;
     background-color: #4c566a;
     padding: 5px;
+}
+.winner {
+    background-color: #b48ead;
+    border-radius: 8px;
+    margin: auto auto;
+    width: 260px;
 }
 td {
     font-size: xx-large;
