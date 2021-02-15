@@ -71,7 +71,7 @@ function getWinner(data) {
 function isPlaying(data) {
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
-            if (data[i][j] == " ") {
+            if (data[i][j] === " ") {
                 return true;
             }
         }
@@ -142,18 +142,29 @@ function place(elem) {
 
     let idx = results.findIndex(res => res === 1);
     if (-1 < idx) {
-        setState(states[idx]);
-        return;
+        // setState(states[idx]);
+        return states[idx];
     }
     idx = results.findIndex(res => res === 0);
     if (-1 < idx){
-        setState(states[idx]);
-        return;
+        // setState(states[idx]);
+        return states[idx];
     }
     idx = results.findIndex(res => res === -1);
-    setState(states[idx]);
+    // setState(states[idx]);
+    return states[idx];
 }
 
+function clear() {
+    let winElem = document.getElementById("winner");
+    winElem.innerHTML = " ";
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            let elem = document.getElementById(`${i}${j}`);
+            elem.innerHTML = " ";
+        }
+    }
+}
 
 let table = document.getElementById("board");
 
@@ -162,7 +173,23 @@ for (let i = 0; i < 3; i++) {
     for (let j = 0; j < 3; j++) {
         let data = document.createElement('td');
         data.id = `${i}${j}`;
-        data.onclick = function () {place(this) };
+        data.onclick = function () {
+            let state = place(this);
+            if (state) {
+                setState(state);
+                let winner = getWinner(state);
+                let winElem = document.getElementById("winner");
+                if (winner !== " ") {
+                    winElem.innerHTML = `${winner} wins!`;
+                    setTimeout( function() {clear() }, 1500);
+                }
+            }
+            else {
+                let winElem = document.getElementById("winner");
+                winElem.innerHTML = "Draw!";
+                setTimeout( function() {clear() }, 1500);
+            }
+        };
         data.innerHTML = " ";
         row.appendChild(data);
     }
