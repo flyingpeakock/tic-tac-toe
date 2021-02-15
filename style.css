@@ -1,6 +1,7 @@
 body {
     background-image: url(/pixelcity.png);
     background-repeat: no-repeat;
+    background-attachment: fixed;
     background-size: cover;
     background-color: #2e3440;
     color: #d8dee9;
